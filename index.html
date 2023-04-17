@@ -106,7 +106,7 @@
             const listElm = document.createElement('div');
             listElm.innerHTML = data;
             const fontFolders = Array.from(listElm.querySelectorAll('#files > li'));
-            fontFolders.shift();
+            // fontFolders.shift();
             for (const folder of fontFolders) {
                 console.log(folder);
                 const fontName = folder.querySelector('a').title;

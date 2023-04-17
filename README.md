@@ -1,6 +1,8 @@
 # Collection of free Fonts for commercial use
 
-A small collection of fonts for modern webdesign.
+A small collection of fonts for modern and creative webdesign.
+
+Preview website: https://free-fonts.vercel.app/
 
 This collection includes fonts you maybe didnt know about, so you wont find Lato, Roboto and co.
 
