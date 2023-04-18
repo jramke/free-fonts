@@ -50,20 +50,15 @@
             overflow: hidden;
         }
         #preloader.ready {
-            /* pointer-events: all; */
-            /* display: none; */
             transform: translateY(100%);
             transition: transform cubic-bezier(.66,0,.79,.31) 0.7s 0.2s;
         }
         #preloader.ready div {
-            /* pointer-events: all; */
-            /* display: none; */
             transform: translateY(100%);
             transition: transform cubic-bezier(.66,0,.79,.31) 0.5s;
         }
         #preview-list {
             border-top: 1px solid var(--bs-body-color);
-            /* margin: 0 -1px -1px 0; */
             display: flex;
             flex-wrap: wrap;
             width: 100%;
@@ -101,9 +96,6 @@
             width: calc(100% / var(--preview-cols));
             order: 1;
         }
-        /* .preview-list__item:nth-child(1n+1) { order: 1; } 
-        .preview-list__item:nth-child(1n+2) { order: 2; } */
-        /* .preview-list__item:nth-child(2n) { order: 3; } */
 
         @media (min-width: 768px) {
             #preview-list {--preview-cols: 2;}
@@ -116,9 +108,6 @@
                 border-left-width: 0;
             }
         }
-        /* @media (min-width: 992px) {
-            #preview-list {--preview-cols: 3;}
-        } */
 
     </style>
     <div class="noise"></div>
@@ -159,14 +148,12 @@
             const listElm = document.createElement('div');
             listElm.innerHTML = data;
             const fontFolders = Array.from(listElm.querySelectorAll('#files > li'));
-            // fontFolders.shift();
             for (const folder of fontFolders) {
                 const fontName = folder.querySelector('a').title;
                 const folderUrl = folder.querySelector('a').href;
                 const link = await fetchData(folderUrl + '/link.txt');
                 createPreviewItem(folderUrl, fontName, link);
             }
-            
             // masonry
             const parent = document.querySelector('#preview-list');
             const items = document.querySelectorAll('.preview-list__item');
@@ -179,7 +166,6 @@
                     setMasonryHeight(parent, items);
                 }, 100);
             };
-
         })();
 
         function setMasonryHeight(parent, childs) {
@@ -197,11 +183,8 @@
                     // add height to parent for each item
                     if (overlap) {
                         const masonryHeight = getComputedStyle(parent).getPropertyValue('--masonry-height').slice(0, -2);
-                        // const newMasonryHeight =  parseInt(masonryHeight) + 1 + 'px';
                         const newMasonryHeight =  parseInt(masonryHeight) + Math.round(rect.height) + 'px';
                         parent.style.setProperty('--masonry-height', newMasonryHeight);
-                        // index=-1; continue;
-                        // break;
                     }
                     // get the offset height of the lowest item and update masonry parent height
                     let newMansoryHeight = childs[index].offsetTop + childs[index].offsetHeight + 2; // dont know why 2 is needed, maybe the top and bottom border of parent?
@@ -218,9 +201,8 @@
             try {
                 const response = await fetch(url);
                 if (!response.ok) {
-                    // throw new Error(`HTTP error! status: ${response.status}`);
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                // const data = await response.textContent;
                 const data = await response.text();
                 return data;
             } catch (error) {
