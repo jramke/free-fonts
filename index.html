@@ -33,39 +33,93 @@
             --bs-btn-padding-y: 0.5rem;
             border-radius: 50px;
         }
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10000;
+            background-color: white;
+            cursor: wait;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #preloader span {
+            overflow: hidden;
+        }
+        #preloader.ready {
+            /* pointer-events: all; */
+            /* display: none; */
+            transform: translateY(100%);
+            transition: transform cubic-bezier(.66,0,.79,.31) 0.7s 0.2s;
+        }
+        #preloader.ready div {
+            /* pointer-events: all; */
+            /* display: none; */
+            transform: translateY(100%);
+            transition: transform cubic-bezier(.66,0,.79,.31) 0.5s;
+        }
         #preview-list {
             border-top: 1px solid var(--bs-body-color);
-            margin: 0 -1px -1px 0;
+            /* margin: 0 -1px -1px 0; */
             display: flex;
             flex-wrap: wrap;
             width: 100%;
             --preview-cols: 1;
+
+            --masonry-height: 2000px;
+            height: var(--masonry-height);
+            flex-flow: column wrap; 
+            position: relative;
+            overflow: hidden;
+        }
+        #preview-list::before, 
+        #preview-list::after { 
+            content: ""; 
+            flex-basis: 100%; 
+            width: 0; 
+            order: 2; 
         }
         .preview-list__item {
             display: inline-flex;
             flex-direction: column;
-            flex: 1 0 calc(100% / var(--preview-cols));
+            /* flex: 1 0 calc(100% / var(--preview-cols)); */
             justify-content: center;
             border-color: var(--bs-body-color);
             border-width: 0px;
             border-style: solid;
-            margin-left: -1px;
+            /* margin-left: -1px; */
             border-left-width: 1px;
             border-right-width: 1px;
-            margin-top: -1px;
+            /* margin-top: -1px; */
             border-bottom-width: 1px;
             padding: 1rem;
             width: fit-content;
+
+            width: calc(100% / var(--preview-cols));
+            order: 1;
         }
+        /* .preview-list__item:nth-child(1n+1) { order: 1; } 
+        .preview-list__item:nth-child(1n+2) { order: 2; } */
+        /* .preview-list__item:nth-child(2n) { order: 3; } */
+
         @media (min-width: 768px) {
             #preview-list {--preview-cols: 2;}
-            .preview-list__item:last-child {
+            /* .preview-list__item:last-child {
                 max-width: calc(100% / var(--preview-cols) + 1px);
+            } */
+            .preview-list__item:nth-child(2n+1) { order: 1; } 
+            .preview-list__item:nth-child(2n+2) { 
+                order: 2; 
+                border-left-width: 0;
             }
         }
         /* @media (min-width: 992px) {
             #preview-list {--preview-cols: 3;}
         } */
+
     </style>
     <div class="noise"></div>
     <svg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg' style="display:none;">
@@ -76,16 +130,16 @@
             numOctaves='3' 
             stitchTiles='stitch'/>
         </filter>
-        
         <rect width='100%' height='100%' filter='url(#noiseFilter)'/>
     </svg>
+    <div id="preloader"><span class="display-5"><div>jramke</div></span></div>  
     <main class="text-center py-5 container">
         <h1 class="display-1 pb-5">Free Fonts for commercial use</h1>
         <div class="d-flex align-items-center justify-content-between pt-5">
             <p>Collection by <a href="https://github.com/jramke/" taget="_blank">jramke</a></p>
             <a class="btn btn-outline-primary mb-5" href="https://github.com/jramke/free-fonts" taget="_blank">More on Github</a>
         </div>
-        <div id="preview-list" class="pb-5"></div>
+        <div id="preview-list" class="mb-5"></div>
         <span class="pt-5">I hope I could inspire you <img src="./assets/peace.png" width="20"></span>
     </main>
 
@@ -100,29 +154,71 @@
             requestAnimationFrame(raf)
         })();
 
-
         (async function () {
-
             const data = await fetchData('./fonts');
             const listElm = document.createElement('div');
             listElm.innerHTML = data;
             const fontFolders = Array.from(listElm.querySelectorAll('#files > li'));
             // fontFolders.shift();
             for (const folder of fontFolders) {
-                console.log(folder);
                 const fontName = folder.querySelector('a').title;
                 const folderUrl = folder.querySelector('a').href;
                 const link = await fetchData(folderUrl + '/link.txt');
                 createPreviewItem(folderUrl, fontName, link);
             }
+            
+            // masonry
+            const parent = document.querySelector('#preview-list');
+            const items = document.querySelectorAll('.preview-list__item');
+            let resizeTimeout;
+            await setMasonryHeight(parent, items);
+            document.querySelector('#preloader').classList.add('ready');
+            window.onresize = function () {
+                clearTimeout(resizeTimeout);
+                resizeTimeout = setTimeout(function () {
+                    setMasonryHeight(parent, items);
+                }, 100);
+            };
 
         })();
+
+        function setMasonryHeight(parent, childs) {
+            new Promise ((resolve, reject) => {
+                let realMansoryHeight = 0;
+                let parentRect = parent.getBoundingClientRect();
+                for (let index = 0; index < childs.length; index++) {
+                    const rect = childs[index].getBoundingClientRect();
+                    let overlap = (
+                        parentRect.right <= rect.left ||
+                        parentRect.left >= rect.right || 
+                        parentRect.bottom <= rect.top || 
+                        parentRect.top >= rect.bottom
+                    )
+                    // add height to parent for each item
+                    if (overlap) {
+                        const masonryHeight = getComputedStyle(parent).getPropertyValue('--masonry-height').slice(0, -2);
+                        // const newMasonryHeight =  parseInt(masonryHeight) + 1 + 'px';
+                        const newMasonryHeight =  parseInt(masonryHeight) + Math.round(rect.height) + 'px';
+                        parent.style.setProperty('--masonry-height', newMasonryHeight);
+                        // index=-1; continue;
+                        // break;
+                    }
+                    // get the offset height of the lowest item and update masonry parent height
+                    let newMansoryHeight = childs[index].offsetTop + childs[index].offsetHeight + 2; // dont know why 2 is needed, maybe the top and bottom border of parent?
+                    if (newMansoryHeight > realMansoryHeight) {
+                        realMansoryHeight = newMansoryHeight;
+                    }
+                }
+                parent.style.setProperty('--masonry-height', realMansoryHeight + 'px');
+                resolve(true);
+            })
+        }
 
         async function fetchData(url) {
             try {
                 const response = await fetch(url);
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                    // throw new Error(`HTTP error! status: ${response.status}`);
                 }
                 // const data = await response.textContent;
                 const data = await response.text();
@@ -131,8 +227,7 @@
                 console.error(error);
             }
         }
-        //TODO: remove download link, just link to site where it can be downloaded
-        // also from github
+
         function createPreviewItem(folder, name, link) {
             document.querySelector('#preview-list').insertAdjacentHTML(
                 'beforeend',
