@@ -58,7 +58,7 @@
             transition: transform cubic-bezier(.66,0,.79,.31) 0.5s;
         }
         #preview-list {
-            border-top: 1px solid var(--bs-body-color);
+            /* border-top: 1px solid var(--bs-body-color); */
             display: flex;
             flex-wrap: wrap;
             width: 100%;
@@ -100,6 +100,9 @@
             width: calc(100% / var(--preview-cols));
             order: 1;
         }
+        .preview-list__item:nth-child(1) {
+            border-top-width: 1px;
+        }
 
 
         @media (min-width: 768px) {
@@ -109,6 +112,9 @@
                 order: 2; 
                 /* border-left-width: 0px; */
                 margin-left: -1px;
+            }
+            .preview-list__item:nth-child(2) {
+                border-top-width: 1px;
             }
         }
 
@@ -191,11 +197,14 @@
                     )
                     // add height to parent for each item
                     if (overlap) {
+                        console.log(childs[index]);
                         const masonryHeight = getComputedStyle(parent).getPropertyValue('--masonry-height').slice(0, -2);
-                        const newMasonryHeight =  parseInt(masonryHeight) + Math.round(rect.height) + 'px';
-                        parent.style.setProperty('--masonry-height', newMasonryHeight);
+                        parent.style.setProperty('--masonry-height', parseInt(masonryHeight) + Math.round(rect.height) + 'px');
+                        console.log(parseInt(masonryHeight) + Math.round(rect.height) + 'px');
                     }
-                    // get the offset height of the lowest item and update masonry parent height
+                }
+                // get the offset height of the lowest item and update masonry parent height
+                for (let index = 0; index < childs.length; index++) {
                     let newMansoryHeight = childs[index].offsetTop + childs[index].offsetHeight + 2; // dont know why 2 is needed, maybe the top and bottom border of parent?
                     if (newMansoryHeight > realMansoryHeight) {
                         realMansoryHeight = newMansoryHeight;
