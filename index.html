@@ -81,7 +81,7 @@
             margin: 0;
         }
         .preview-list__item {
-            min-height: 300px;
+            min-height: 200px;
             display: inline-flex;
             flex-direction: column;
             /* flex: 1 0 calc(100% / var(--preview-cols)); */
@@ -158,16 +158,9 @@
         })();
 
         (async function () {
-            const data = await fetchData('./fonts');
-            const listElm = document.createElement('div');
-            listElm.innerHTML = data;
-            const fontFolders = Array.from(listElm.querySelectorAll('#files > li'));
-            // fontFolders.shift();
-            for (const folder of fontFolders) {
-                const fontName = folder.querySelector('a').title;
-                const folderUrl = folder.querySelector('a').href;
-                const link = await fetchData(folderUrl + '/link.txt');
-                createPreviewItem(folderUrl, fontName, link);
+            const data = await fetchData('./fonts.json');
+            for(const font of data) {
+                await createPreviewItem(font.image, font.name, font.link);
             }
             // masonry
             const parent = document.querySelector('#preview-list');
@@ -222,37 +215,31 @@
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                const data = await response.text();
+                const data = await response.json();
                 return data;
             } catch (error) {
                 console.error(error);
             }
         }
 
-        // TODO: wait for the images to load, currently the .preview-list__item has min-height for masonry calculation
-        function createPreviewItem(folder, name, link) {
-            // return new Promise((resolve, reject) =>  {
-            //     const item = document.createElement('a');
-            //     item.href = link;
-            //     item.className = 'preview-list__item';
-            //     item.target = '_blank';
-            //     item.innerHTML = `
-            //         <img src="${folder}/font.jpg">
-            //         <h2 class="visually-hidden">${name}</h2>
-            //     `;
-            //     document.querySelector('#preview-list').appendChild(item);
-            //     window.addEventListener('load', () => console.log('loaded'))
-            //     resolve();
-            //     // item.addEventListener('load', () => resolve());
-            // })
-            document.querySelector('#preview-list').insertAdjacentHTML(
-                'beforeend',
-                // `<a class="preview-list__item" href="${folder}/font.zip" download="${name}.zip">
-                `<a class="preview-list__item" target="_blank" href="${link}">
-                    <img src="${folder}/font.jpg">
-                    <h2 class="visually-hidden">${name}</h2>
-                </a>`
-            );
+        function createPreviewItem(image, name, link) {
+            return new Promise((resolve, reject) =>  {
+                const item = document.createElement('a');
+                item.href = link;
+                item.className = 'preview-list__item';
+                item.target = '_blank';
+                let imageElm = new Image(900);
+                imageElm.src = image;
+                item.appendChild(imageElm);
+                item.insertAdjacentHTML(
+                    'beforeend',
+                    `<h2 class="visually-hidden">${name}</h2>`
+                );
+                imageElm.onload = () => {
+                    document.querySelector('#preview-list').appendChild(item);
+                    resolve();
+                }
+            })
         }
 
     </script>
