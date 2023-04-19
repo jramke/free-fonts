@@ -9,7 +9,8 @@ This collection includes fonts you maybe didnt know about, so you wont find Lato
 Here are also some links to some cool Websites to find more fonts.
 
 - https://www.fontshare.com/
-- https://www.collletttivo.it/ (credit needed)
+- https://www.awwwards.com/awwwards/collections/free-fonts/
+- https://www.collletttivo.it/ (maybe credit needed)
 - https://befonts.com/free-for-commercial-use
 - https://fontesk.com/license/free-for-commercial-use/ (double check if fonts are really free for commercial use)
 - https://limitype.gumroad.com/
