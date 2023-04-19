@@ -138,9 +138,9 @@
     </div></span></div>  
     <main class="text-center py-5 container">
         <h1 class="display-1 pb-5">Free Fonts for commercial use</h1>
-        <div class="d-flex align-items-center justify-content-between pt-5">
-            <p>Collection by <a href="https://github.com/jramke/" taget="_blank">jramke</a></p>
-            <a class="btn btn-outline-primary mb-5" href="https://github.com/jramke/free-fonts" taget="_blank">More on Github</a>
+        <div class="d-flex align-items-center justify-content-between py-5">
+            <p class="mb-0">Collection by <a href="https://github.com/jramke/" taget="_blank" rel="noopener">jramke</a></p>
+            <a class="btn btn-outline-primary" href="https://github.com/jramke/free-fonts" taget="_blank" rel="noopener">More on Github</a>
         </div>
         <div id="preview-list" class="mb-5"></div>
         <span class="pt-5">I hope I could inspire you <img src="./assets/peace.png" width="20"></span>
@@ -228,6 +228,7 @@
                 item.href = link;
                 item.className = 'preview-list__item';
                 item.target = '_blank';
+                item.rel = "noopener";
                 let imageElm = new Image(900);
                 imageElm.src = image;
                 item.appendChild(imageElm);
