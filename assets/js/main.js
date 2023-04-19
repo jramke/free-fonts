@@ -48,7 +48,7 @@ function createPreviewItem(image, name, link) {
         item.href = link;
         item.className = 'preview-list__item';
         item.target = '_blank';
-        item.rel = "noopener";
+        item.rel = "noopener noreferrer";
         let imageElm = new Image(900);
         // imageElm.setAttribute('data-src', image);
         imageElm.src = image;
