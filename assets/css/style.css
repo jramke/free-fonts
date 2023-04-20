@@ -2,6 +2,10 @@
   scroll-behavior: auto;
 }
 
+body {
+  min-height: 101vh;
+}
+
 img {
   max-width: 100%;
   height: auto;
