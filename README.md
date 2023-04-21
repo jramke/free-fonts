@@ -14,6 +14,7 @@ Here are also some links to some cool Websites to find more fonts.
 - https://befonts.com/free-for-commercial-use
 - https://fontesk.com/license/free-for-commercial-use/ (double check if fonts are really free for commercial use)
 - https://limitype.gumroad.com/
+- https://www.fontget.com/
 
 Some cool Google Fonts you may dont know:
 
