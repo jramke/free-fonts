@@ -1,4 +1,4 @@
-export class Masonry {
+export default class Masonry {
 
     constructor(parent, childs) {
         this.parent = parent;
