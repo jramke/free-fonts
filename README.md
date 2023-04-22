@@ -18,6 +18,7 @@ Here are also some links to some cool Websites to find more fonts.
 
 Some cool Google Fonts you may dont know:
 
+- Fraunces https://fonts.google.com/specimen/Fraunces (similar to Recoleta or Cooper Black)
 - Syncopate https://fonts.google.com/specimen/Syncopate
 - Krona One https://fonts.google.com/specimen/Krona+One
 - Syne https://fonts.google.com/specimen/Syne
