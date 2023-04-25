@@ -30,6 +30,11 @@
         "image": "./fonts/fogtwono5/font.jpg"
     },
     {
+        "name": "Fraunces",
+        "link": "https://fraunces.undercase.xyz/",
+        "image": "./fonts/fraunces/font.jpg"
+    },
+    {
         "name": "Giant Boss",
         "link": "https://heyfonts.gumroad.com/l/GiantBoss",
         "image": "./fonts/giant_boss/font.jpg"
